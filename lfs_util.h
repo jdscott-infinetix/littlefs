@@ -31,7 +31,10 @@
 #ifndef LFS_NO_ASSERT
 #include <assert.h>
 #endif
-#if !defined(LFS_NO_DEBUG) || !defined(LFS_NO_WARN) || !defined(LFS_NO_ERROR)
+#if !defined(LFS_NO_DEBUG) || \
+        !defined(LFS_NO_WARN) || \
+        !defined(LFS_NO_ERROR) || \
+        defined(LFS_YES_TRACE)
 #include <stdio.h>
 #endif
 
@@ -65,6 +68,13 @@ extern "C"
     printf("lfs error:%d: " fmt "\n", __LINE__, __VA_ARGS__)
 #else
 #define LFS_ERROR(fmt, ...)
+#endif
+
+#ifdef LFS_YES_TRACE
+#define LFS_TRACE(fmt, ...) \
+    printf("lfs trace:%d: " fmt "\n", __LINE__, __VA_ARGS__)
+#else
+#define LFS_TRACE(fmt, ...)
 #endif
 
 // Runtime assertions
