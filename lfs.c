@@ -630,11 +630,16 @@ static int lfs_dir_traverse_filter(void *p,
     lfs_tag_t *filtertag = p;
     (void)buffer;
 
+    // which mask depends on unique bit in tag structure
+    uint32_t mask = (tag & LFS_MKTAG(0x100, 0, 0))
+            ? LFS_MKTAG(0x7ff, 0x3ff, 0)
+            : LFS_MKTAG(0x700, 0x3ff, 0);
+
     // check for redundancy
-    uint32_t mask = LFS_MKTAG(0x7ff, 0x3ff, 0);
     if ((mask & tag) == (mask & *filtertag) ||
-        (mask & tag) == (LFS_MKTAG(LFS_TYPE_DELETE, 0, 0) |
-            (LFS_MKTAG(0, 0x3ff, 0) & *filtertag))) {
+            (LFS_MKTAG(0x7ff, 0x3ff, 0) & tag) == (
+                LFS_MKTAG(LFS_TYPE_DELETE, 0, 0) |
+                    (LFS_MKTAG(0, 0x3ff, 0) & *filtertag))) {
         return true;
     }
 
