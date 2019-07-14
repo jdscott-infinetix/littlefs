@@ -382,6 +382,12 @@ typedef struct lfs {
     lfs_size_t file_max;
     lfs_size_t attr_max;
 
+    // Enter a critical section for file-system operations
+    void (*lock) (void* context);
+
+    // Leave a critical section for file-system operations
+    void (*unlock) (void* context);
+
 #ifdef LFS_MIGRATE
     struct lfs1 *lfs1;
 #endif
